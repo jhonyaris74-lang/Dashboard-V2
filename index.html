@@ -854,7 +854,8 @@ sla: item.SLA || 0
 });
 });
 return Object.values(grouped);
-  useEffect(() => {
+  }
+ useEffect(() => {
 loadSharePointData()
 .then(projects => {
 setProjects(projects);
