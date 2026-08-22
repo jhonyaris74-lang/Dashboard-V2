@@ -815,7 +815,8 @@ function App() {
   const [fStatus, setFStatus] = useState("all");
   const KEYP = "pm_portfolio_v2",
     KEYH = "pm_holidays_v2";
-  async function loadSharePointData() {
+  async function loadSharePointData() 
+  {
 const res = await fetch(
 "https://btpns.sharepoint.com/sites/ProjectManagemet/_api/web/lists/getbytitle('Project Monitoring')/items",
 {
