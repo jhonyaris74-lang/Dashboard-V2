@@ -853,8 +853,6 @@ progress: item.Progress || 0,
 sla: item.SLA || 0
 });
 });
-return Object.values(grouped);
-  }
 useEffect(() => {
 setProjects(SEED_PROJECTS);
 setHolidays(SEED_HOLIDAYS);
@@ -2495,6 +2493,9 @@ function Style() {
 `);
 }
 ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+  } catch (err) {
+console.error(err);
+}
 </script>
 </body>
 </html>
