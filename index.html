@@ -855,17 +855,9 @@ sla: item.SLA || 0
 });
 return Object.values(grouped);
   }
- useEffect(() => {
-loadSharePointData()
-.then(projects => {
-setProjects(projects);
-setHolidays(SEED_HOLIDAYS);
-})
-.catch(err => {
-console.error(err);
+useEffect(() => {
 setProjects(SEED_PROJECTS);
 setHolidays(SEED_HOLIDAYS);
-});
 }, []);
   const persistP = useCallback(n => {
     setProjects(n);
