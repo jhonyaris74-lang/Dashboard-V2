@@ -815,6 +815,44 @@ function App() {
   const [fStatus, setFStatus] = useState("all");
   const KEYP = "pm_portfolio_v2",
     KEYH = "pm_holidays_v2";
+  async function loadSharePointData() {
+const res = await fetch(
+"https://btpns.sharepoint.com/sites/ProjectManagemet/_api/web/lists/getbytitle('Project Monitoring')/items",
+{
+headers: {
+"Accept": "application/json;odata=nometadata"
+}
+}
+);
+const data = await res.json();
+const grouped = {};
+data.value.forEach(item => {
+const projectName = item.ProjectName || "No Project";
+if (!grouped[projectName]) {
+grouped[projectName] = {
+id: String(item.ID),
+name: projectName,
+code: item.PROJECTCODE || "",
+owner: item.PIC || "",
+category: "SharePoint",
+tasks: []
+};
+}
+grouped[projectName].tasks.push({
+id: String(item.ID),
+name: item.Title || "",
+pic: item.PIC || "",
+priority: item.Priority || "",
+start: item.StartDate
+? item.StartDate.substring(0,10)
+: "",
+due: item.DueDate
+? item.DueDate.substring(0,10)
+: "",
+progress: item.Progress || 0,
+sla: item.SLA || 0
+});
+});
 useEffect(() => {
 setProjects(SEED_PROJECTS);
 setHolidays(SEED_HOLIDAYS);
@@ -2454,9 +2492,7 @@ function Style() {
 ::-webkit-scrollbar{width:8px;height:8px;} ::-webkit-scrollbar-thumb{background:#CBD2DC;border-radius:8px;}
 `);
 }
-ReactDOM.createRoot(document.getElementById('root')).render(
-/*#__PURE__*/React.createElement(App, null)
-);
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 </script>
 </body>
 </html>
