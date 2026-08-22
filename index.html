@@ -854,6 +854,21 @@ sla: item.SLA || 0
 });
 });
 useEffect(() => {
+fetch(
+"https://btpns.sharepoint.com/sites/ProjectManagemet/_api/web/lists/getbytitle('Project Monitoring')/items",
+{
+headers: {
+"Accept": "application/json;odata=nometadata"
+}
+}
+)
+.then(r => r.json())
+.then(data => {
+console.log("SP DATA:", data);
+})
+.catch(err => {
+console.error("SP ERROR:", err);
+});
 setProjects(SEED_PROJECTS);
 setHolidays(SEED_HOLIDAYS);
 }, []);
