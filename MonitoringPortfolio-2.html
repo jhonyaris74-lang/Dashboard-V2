@@ -815,20 +815,57 @@ function App() {
   const [fStatus, setFStatus] = useState("all");
   const KEYP = "pm_portfolio_v2",
     KEYH = "pm_holidays_v2";
+  async function loadSharePointData() {
+const res = await fetch(
+"https://btpns.sharepoint.com/sites/ProjectManagemet/_api/web/lists/getbytitle('Project Monitoring')/items",
+{
+headers: {
+"Accept": "application/json;odata=nometadata"
+}
+}
+);
+const data = await res.json();
+const grouped = {};
+data.value.forEach(item => {
+const projectName = item.ProjectName || "No Project";
+if (!grouped[projectName]) {
+grouped[projectName] = {
+id: String(item.ID),
+name: projectName,
+code: item.PROJECTCODE || "",
+owner: item.PIC || "",
+category: "SharePoint",
+tasks: []
+};
+}
+grouped[projectName].tasks.push({
+id: String(item.ID),
+name: item.Title || "",
+pic: item.PIC || "",
+priority: item.Priority || "",
+start: item.StartDate
+? item.StartDate.substring(0,10)
+: "",
+due: item.DueDate
+? item.DueDate.substring(0,10)
+: "",
+progress: item.Progress || 0,
+sla: item.SLA || 0
+});
+});
+return Object.values(grouped);
   useEffect(() => {
-    try {
-      const r = localStorage.getItem(KEYP);
-      setProjects(r ? JSON.parse(r) : SEED_PROJECTS);
-    } catch (e) {
-      setProjects(SEED_PROJECTS);
-    }
-    try {
-      const h = localStorage.getItem(KEYH);
-      setHolidays(h ? JSON.parse(h) : SEED_HOLIDAYS);
-    } catch (e) {
-      setHolidays(SEED_HOLIDAYS);
-    }
-  }, []);
+loadSharePointData()
+.then(projects => {
+setProjects(projects);
+setHolidays(SEED_HOLIDAYS);
+})
+.catch(err => {
+console.error(err);
+setProjects(SEED_PROJECTS);
+setHolidays(SEED_HOLIDAYS);
+});
+}, []);
   const persistP = useCallback(n => {
     setProjects(n);
     try {
